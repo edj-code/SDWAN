@@ -365,10 +365,49 @@ def process_excel_and_upload(excel_file_path, vmanage_host, username, password):
 # MAIN ENTRY POINT
 # ============================================================
 if __name__ == "__main__":
-    # Configuration
-    VMANAGE_HOST = "10.89.1.130:44132"       # e.g., "198.18.1.10"
-    USERNAME = "admin"           # e.g., "admin"
-    PASSWORD = "cisco"           # e.g., "admin"
-    EXCEL_FILE = "data.xlsx"         # e.g., "policy_objects.xlsx"
 
+    print("=" * 60)
+    print("   vManage Policy Object Uploader")
+    print("=" * 60)
+
+    # --- Collect user inputs ---
+    VMANAGE_HOST = input("Enter vManage Host (e.g., 198.18.1.10): ").strip()
+    while not VMANAGE_HOST:
+        print("[ERROR] vManage Host cannot be empty.")
+        VMANAGE_HOST = input("Enter vManage Host: ").strip()
+
+    USERNAME = input("Enter Username (e.g., admin): ").strip()
+    while not USERNAME:
+        print("[ERROR] Username cannot be empty.")
+        USERNAME = input("Enter Username: ").strip()
+
+    import getpass
+    PASSWORD = getpass.getpass("Enter Password: ").strip()
+    while not PASSWORD:
+        print("[ERROR] Password cannot be empty.")
+        PASSWORD = getpass.getpass("Enter Password: ").strip()
+
+    EXCEL_FILE = input("Enter Excel File Path (e.g., data.xlsx): ").strip()
+    while not EXCEL_FILE:
+        print("[ERROR] Excel File Path cannot be empty.")
+        EXCEL_FILE = input("Enter Excel File Path: ").strip()
+
+    # --- Validate Excel file exists before proceeding ---
+    if not os.path.isfile(EXCEL_FILE):
+        print(f"\n[CRITICAL] Excel file '{EXCEL_FILE}' not found. Please check the path and try again.")
+        sys.exit(1)
+
+    print("\n" + "=" * 60)
+    print(f"  Host      : {VMANAGE_HOST}")
+    print(f"  Username  : {USERNAME}")
+    print(f"  Password  : {'*' * len(PASSWORD)}")
+    print(f"  Excel File: {EXCEL_FILE}")
+    print("=" * 60)
+
+    confirm = input("\nProceed with the above settings? (yes/no): ").strip().lower()
+    if confirm not in ("yes", "y"):
+        print("Aborted by user.")
+        sys.exit(0)
+
+    # --- Run the main process ---
     process_excel_and_upload(EXCEL_FILE, VMANAGE_HOST, USERNAME, PASSWORD)
