@@ -371,12 +371,12 @@ if __name__ == "__main__":
     print("=" * 60)
 
     # --- Collect user inputs ---
-    VMANAGE_HOST = input("Enter vManage Host (e.g., 198.18.1.10): ").strip()
+    VMANAGE_HOST = input("Enter vManage Host (e.g., 198.18.1.10 or URL without https://): ").strip()
     while not VMANAGE_HOST:
         print("[ERROR] vManage Host cannot be empty.")
         VMANAGE_HOST = input("Enter vManage Host: ").strip()
 
-    USERNAME = input("Enter Username (e.g., admin): ").strip()
+    USERNAME = input("Enter Username: ").strip()
     while not USERNAME:
         print("[ERROR] Username cannot be empty.")
         USERNAME = input("Enter Username: ").strip()
@@ -387,7 +387,7 @@ if __name__ == "__main__":
         print("[ERROR] Password cannot be empty.")
         PASSWORD = getpass.getpass("Enter Password: ").strip()
 
-    EXCEL_FILE = input("Enter Excel File Path (e.g., data.xlsx): ").strip()
+    EXCEL_FILE = input("Enter Excel File Path (e.g., file.xlsx): ").strip()
     while not EXCEL_FILE:
         print("[ERROR] Excel File Path cannot be empty.")
         EXCEL_FILE = input("Enter Excel File Path: ").strip()

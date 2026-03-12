@@ -1,3 +1,5 @@
 ECHO is on.
 data.xlsx 
 generated_policy_objects/ 
+*.csv 
+*.json 
