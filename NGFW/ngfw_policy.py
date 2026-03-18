@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Unified vManage Policy Object Uploader & NGFW Policy Manager
 
@@ -7,9 +6,7 @@ Phase 1: Reads policy objects (Data Prefixes, Port Lists, Security Zones)
          - Security Zones support both Interface and VPN types.
 Phase 2: Reads NGFW rules from the "NGFW Rules" sheet of the SAME Excel file
          and creates/updates the embedded-security profile and policy in vManage.
-
-Usage:
-    python unified_ngfw_manager.py
+         
 """
 
 import requests
@@ -1240,7 +1237,7 @@ def run_phase2_create(session, cache, zone_pair_rules, zone_pair_defaults):
         print(f"#    {src} -> {dst}: {da.upper()}")
     print(f"#")
     print(f"#  ─── FOR FUTURE UPDATES ───────────────────────────")
-    print(f"#  Set these in the script and change MODE to 'update':")
+    print(f"#  While running again the script, set these values when asked to, and change MODE to 'update':")
     print(f"#")
     print(f"#  MODE = \"update\"")
     print(f"#  EXISTING_PROFILE_ID = \"{security_profile_id}\"")
@@ -1467,7 +1464,7 @@ def main():
     print("=" * 70)
 
     # ── Collect Common Inputs ─────────────────────────────────────────────
-    VMANAGE_HOST = input("\nEnter vManage Host (e.g., 198.18.1.10): ").strip()
+    VMANAGE_HOST = input("\nEnter vManage Host (e.g., 198.168.1.10): ").strip()
     while not VMANAGE_HOST:
         print("[ERROR] vManage Host cannot be empty.")
         VMANAGE_HOST = input("Enter vManage Host: ").strip()
