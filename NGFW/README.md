@@ -121,7 +121,7 @@ When the script ends, next output will be shown:
   EXISTING_PROFILE_ID = "xxxxxxx-yyyy-zzzz-aaaa-bbbbbbbb"  
   EXISTING_POLICY_ID  = "jjjjjjj-kkkk-llll-mmmmmm-oooooooo"  
 ```  
-**Note : You will need the "EXISTING_PROFILE_ID" and the "EXISTING_POLICY_ID" if you use the "update" mode of this script to update the NGFW policy**
+**Note : You will need the "EXISTING_PROFILE_ID" and the "EXISTING_POLICY_ID" if you use the "update" mode of this script to update the NGFW policy**  
 
 
 **c) If mode is "update", next menu will be shown to specify the NGFW policy to be updated**  
