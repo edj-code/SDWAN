@@ -1464,7 +1464,7 @@ def main():
     print("=" * 70)
 
     # ── Collect Common Inputs ─────────────────────────────────────────────
-    VMANAGE_HOST = input("\nEnter vManage Host (e.g., 198.168.1.10): ").strip()
+    VMANAGE_HOST = input("\nEnter vManage Host (e.g., 198.168.1.10 or URL without https://): ").strip()
     while not VMANAGE_HOST:
         print("[ERROR] vManage Host cannot be empty.")
         VMANAGE_HOST = input("Enter vManage Host: ").strip()
