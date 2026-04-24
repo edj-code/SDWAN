@@ -4,6 +4,7 @@ Unified vManage Policy Object Uploader & NGFW Policy Manager
 Phase 1: Reads policy objects (Data Prefixes, Port Lists, Security Zones)
          from an Excel file and uploads them to vManage.
          - Security Zones support both Interface and VPN types.
+         - Added option to define variables instead of values
 Phase 2: Reads NGFW rules from the "NGFW Rules" sheet of the SAME Excel file
          and creates/updates the embedded-security profile and policy in vManage.
          
