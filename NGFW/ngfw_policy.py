@@ -660,30 +660,98 @@ def sanitize_port_value(raw: str) -> list:
 # ── Field Processors ─────────────────────────────────────────────────────────
 
 def process_ip_field(field_type, field_data, cache, field_name):
+    """
+    Processes the Source IP or Destination IP columns from the NGFW Rules sheet.
+
+    Args:
+        field_type: 'object', 'value', or 'variable' (from Column C or G)
+        field_data: The data string (from Column D or H)
+        cache:      ObjectCache instance for resolving object names to UUIDs
+        field_name: 'source' or 'destination'
+
+    Returns:
+        A dict representing a single match entry, or None if invalid/empty.
+
+    JSON structures by field_type:
+
+        object   -> sourceDataPrefixList.refId.optionType = "global"
+                    sourceDataPrefixList.refId.value      = [uuid, ...]
+
+        value    -> sourceIp.ipv4Value.optionType = "global"
+                    sourceIp.ipv4Value.value      = ["10.0.0.1/32", ...]
+
+        variable -> sourceIp.ipv4Value.optionType = "variable"
+                    sourceIp.ipv4Value.value      = "{{varName}}"
+    """
     if is_empty_or_dash(field_data):
         return None
+
+    # ── OBJECT: resolve named prefix-list objects to UUIDs ────────────────
     if field_type == "object":
         object_names = [n.strip() for n in re.split(r'[;,]', field_data) if n.strip()]
         uuid_list = []
         for obj_name in object_names:
             uuid = cache.resolve("security-data-ip-prefix", obj_name)
             if not uuid:
+                print(f"  ⚠️ IP prefix object not found: '{obj_name}'")
                 return None
             uuid_list.append(uuid)
         if field_name == "source":
-            return {"sourceDataPrefixList": {"refId": {"optionType": "global", "value": uuid_list}}}
+            return {"sourceDataPrefixList": {
+                "refId": {"optionType": "global", "value": uuid_list}}}
         else:
-            return {"destinationDataPrefixList": {"refId": {"optionType": "global", "value": uuid_list}}}
+            return {"destinationDataPrefixList": {
+                "refId": {"optionType": "global", "value": uuid_list}}}
+
+    # ── VALUE: literal IP/CIDR addresses ──────────────────────────────────
     elif field_type == "value":
         ip_list = sanitize_ip_list(field_data)
         if not ip_list:
             return None
         if field_name == "source":
-            return {"sourceIp": {"ipv4Value": {"optionType": "global", "value": ip_list}}}
+            return {"sourceIp": {
+                "ipv4Value": {"optionType": "global", "value": ip_list}}}
         else:
-            return {"destinationIp": {"ipv4Value": {"optionType": "global", "value": ip_list}}}
-    return None
+            return {"destinationIp": {
+                "ipv4Value": {"optionType": "global", "value": ip_list}}}
 
+    # ── VARIABLE: device-level variable ───────────────────────────────────
+    elif field_type == "variable":
+        var_name = field_data.strip()
+        if not var_name:
+            print(f"  ⚠️ Variable name is empty for {field_name} IP field")
+            return None
+
+        # Wrap in {{...}} if the user didn't already include the braces
+        if not (var_name.startswith("{{") and var_name.endswith("}}")):
+            var_value = "{{" + var_name + "}}"
+        else:
+            var_value = var_name
+
+        if field_name == "source":
+            return {
+                "sourceIp": {
+                    "ipv4Value": {
+                        "optionType": "variable",
+                        "value": var_value
+                    }
+                }
+            }
+        else:
+            return {
+                "destinationIp": {
+                    "ipv4Value": {
+                        "optionType": "variable",
+                        "value": var_value
+                    }
+                }
+            }
+
+    # ── UNKNOWN field_type ────────────────────────────────────────────────
+    else:
+        print(f"  ⚠️ Unknown IP field type: '{field_type}' "
+              f"(expected 'object', 'value', or 'variable')")
+        return None
 
 def process_port_field(port_type, port_data, cache, field_name):
     if is_empty_or_dash(port_data):
