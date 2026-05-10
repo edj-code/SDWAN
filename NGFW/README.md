@@ -65,11 +65,11 @@ Column name | Expected Content |
 SOURCE ZONE | ZONE NAME
 DST ZONE | ZONE NAME
 TYPE OF DATA PREFIX SOURCE | object or value
-DATA PREFIX SOURCE | object_name or IP value(s)
+DATA PREFIX SOURCE | object_name or IP value(s) or variable
 TYPE OF DATA PORT SOURCE | object or value
 PORT SOURCE | object_name or Port value(s)
 TYPE OF DATA PREFIX DESTINATION | object or value
-DATA PREFIX DESTINATION | object_name or IP value(s)
+DATA PREFIX DESTINATION | object_name or IP value(s) or variable
 TYPE OF DATA PORT DST | object or value
 PORT DST | object_name or Port value(s)
 TYPE OF DATA PROTOCOL | object or value or name
